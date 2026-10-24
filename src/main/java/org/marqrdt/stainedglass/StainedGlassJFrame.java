@@ -108,6 +108,8 @@ public class StainedGlassJFrame extends JFrame {
 		menuBar.add(mnFileMenu);
 
 		JMenuItem newGameNewMenuItem = new JMenuItem("New game...");
+		newGameNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
 		newGameNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				gameSquares.reinit();
