@@ -3,8 +3,10 @@ package org.marqrdt.stainedglass;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -17,6 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
 import java.io.File;
@@ -113,6 +116,17 @@ public class StainedGlassJFrame extends JFrame {
 		mnFileMenu.add(newGameNewMenuItem);
 		JMenu mnEditMenu = new JMenu("Edit");
 		menuBar.add(mnEditMenu);
+
+		JMenuItem undoMenuItem = new JMenuItem("Undo");
+		undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+		undoMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gameSquares.undo();
+			}
+		});
+		mnEditMenu.add(undoMenuItem);
+
 		JMenu mnGameMenu = new JMenu("Game");
 		menuBar.add(mnGameMenu);
 		contentPane = new JPanel();
