@@ -32,7 +32,6 @@ public class StainedGlassJFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel moveCounterLabel;
-	private JLabel hiScoreValueLabel;
 	private GameBoard gameSquares;
 
 	/**
@@ -156,20 +155,12 @@ public class StainedGlassJFrame extends JFrame {
 
 		moveCounterLabel = new JLabel(String.valueOf(gameSquares.getScore()));
 		toolBar.add(moveCounterLabel);
-		toolBar.add(Box.createHorizontalStrut(24));
 
 		gameSquares.addGameBoardListener(new GameBoardListener() {
 			public void gameBoardChanged(GameBoard board) {
 				moveCounterLabel.setText(String.valueOf(board.getScore()));
 			}
 		});
-
-		JLabel hiScoreLabel = new JLabel("Hi Score:");
-		toolBar.add(hiScoreLabel);
-		toolBar.add(Box.createHorizontalStrut(6));
-
-		hiScoreValueLabel = new JLabel("0");
-		toolBar.add(hiScoreValueLabel);
 
 		// JPanel panel = new JPanel();
 		JPanel gamePanel = getGamePanel();
