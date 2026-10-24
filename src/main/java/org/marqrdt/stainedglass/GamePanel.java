@@ -25,6 +25,11 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 	int panelHeight = 240;
 	private GameBoard model;
 
+	// per-square randomized blink timing for currently-legal target squares:
+	// { periodMillis, effectiveStartTimeMillis }, recomputed whenever the
+	// selection (and therefore the set of legal targets) changes.
+	private final Map<Point, long[]> targetBlinkTiming = new HashMap<Point, long[]>();
+
 	public GamePanel(GameBoard gameModel) {
 		super(gameModel);
 		super.setBackground(Color.WHITE);
@@ -38,6 +43,43 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 		this.setSize(gameModel.getBoardWidth() * gameModel.getSquareSize(),
 				gameModel.getBoardHeight() * gameModel.getSquareSize());
 		this.setVisible(true);
+	}
+
+	public void updateDisplay() {
+		refreshTargetBlinkTiming();
+		repaint();
+	}
+
+	private void refreshTargetBlinkTiming() {
+		targetBlinkTiming.clear();
+		Point selected = getModel().getSelectedSquarePosition();
+		if (selected == null) {
+			return;
+		}
+		long now = System.currentTimeMillis();
+		for (int i = 0; i < getModel().getBoardWidth(); i++) {
+			for (int j = 0; j < getModel().getBoardHeight(); j++) {
+				Point candidate = new Point(i, j);
+				if (!candidate.equals(selected)
+						&& getModel().isLegalMove(selected, candidate)) {
+					long period = 1000 + (long) (Math.random() * 1000); // 1000-2000ms
+					long phase = (long) (Math.random() * period);
+					targetBlinkTiming.put(candidate, new long[] { period,
+							now - phase });
+				}
+			}
+		}
+	}
+
+	private boolean isBlinkOnForSquare(Point p) {
+		long[] timing = targetBlinkTiming.get(p);
+		if (timing == null) {
+			return false;
+		}
+		long period = timing[0];
+		long start = timing[1];
+		long elapsed = (System.currentTimeMillis() - start) % period;
+		return elapsed < period / 2;
 	}
 
 	public Dimension getPreferredSize() {
@@ -66,15 +108,16 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 					continue;
 				}
 
-				boolean blinkOn = getCurrentHightlightColor() != null;
 				boolean isSelected = getModel().getSelectedSquarePosition() != null
 						&& getModel().getSelectedSquarePosition().equals(
 								currentPoint);
-				boolean showTargetIndicator = !isSelected
+				boolean isLegalTarget = !isSelected
 						&& getModel().getSelectedSquarePosition() != null
 						&& getModel().isLegalMove(
 								getModel().getSelectedSquarePosition(),
-								currentPoint) && blinkOn;
+								currentPoint);
+				boolean showTargetIndicator = isLegalTarget
+						&& isBlinkOnForSquare(currentPoint);
 
 				String colorName = sq.getColor().getIconColorName();
 				if (colorName != null) {
@@ -96,8 +139,7 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 					// simple indicator dot directly so the move is not
 					// hidden from the player.
 					int inset = squareSize / 8;
-					g2d.setColor(isSelected ? Color.BLACK
-							: getCurrentHightlightColor());
+					g2d.setColor(isSelected ? Color.BLACK : Color.LIGHT_GRAY);
 					g2d.fillOval(sq.getPoint().x + inset, sq.getPoint().y
 							+ inset, squareSize - 2 * inset, squareSize - 2
 							* inset);
@@ -186,10 +228,6 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public void updateDisplay() {
-		repaint();
 	}
 
 	public GameBoard getModel() {

@@ -1,7 +1,5 @@
 package org.marqrdt.stainedglass;
 
-import java.awt.Color;
-
 import javax.swing.Timer;
 
 public class ThreadedGamePanel extends AbstractGamePanel {
@@ -9,15 +7,12 @@ public class ThreadedGamePanel extends AbstractGamePanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Color currentHighlightColor = Color.LIGHT_GRAY;
+	private static final int TICK_INTERVAL_MS = 100;
 	private final Timer blinkTimer;
 
 	public ThreadedGamePanel(GameBoard gameModel) {
 		super(gameModel);
-		blinkTimer = new Timer(500, e -> {
-			currentHighlightColor = (currentHighlightColor != null) ? null : Color.LIGHT_GRAY;
-			repaint();
-		});
+		blinkTimer = new Timer(TICK_INTERVAL_MS, e -> repaint());
 	}
 
 	public void start() {
@@ -32,9 +27,5 @@ public class ThreadedGamePanel extends AbstractGamePanel {
 
 	public void updateDisplay() {
 		repaint();
-	}
-
-	public Color getCurrentHightlightColor() {
-		return currentHighlightColor;
 	}
 }
