@@ -71,7 +71,7 @@ public class StainedGlassGame extends JFrame implements Serializable {
 	int defaultBoardWidth = 16; // the number of horizontal squares on the board
 	int defaultBoardHeight = 8; // the number of vertical squares on the board
 	int defaultSquareSize = 50; // the size in pixels of each square
-	String gamePropFile = "stainedGlass";
+	String gamePropFile = "META-INF/stainedGlass";
 	Properties gameProps = GameProperties.loadProperties(gamePropFile, Thread
 			.currentThread().getClass().getClassLoader());
 

@@ -5,12 +5,15 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GameBoard extends java.util.Observable implements Serializable {
+public class GameBoard implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private final transient List<GameBoardListener> listeners = new ArrayList<GameBoardListener>();
 	// private Vector squareVector = new Vector();
 	private java.util.Stack undoStack = new java.util.Stack();
 	private Square[][] squares;
@@ -67,8 +70,21 @@ public class GameBoard extends java.util.Observable implements Serializable {
 		previousSelectedSquarePosition = null;
 		selectedSquarePosition = null;
 		numberOfMoves = 0;
-		setChanged();
-		notifyObservers();
+		fireGameBoardChanged();
+	}
+
+	public void addGameBoardListener(GameBoardListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeGameBoardListener(GameBoardListener listener) {
+		listeners.remove(listener);
+	}
+
+	private void fireGameBoardChanged() {
+		for (GameBoardListener listener : listeners) {
+			listener.gameBoardChanged(this);
+		}
 	}
 
 	public Point getSquarePositionAtPoint(Point p) {
@@ -99,13 +115,12 @@ public class GameBoard extends java.util.Observable implements Serializable {
 				&& targetPosition.y < squares[0].length) {
 			Square targetSquare = squares[targetPosition.x][targetPosition.y];
 			// if selectedSquarePosition is null, set it to targetPoint, notify
-			// Observers and return.
+			// listeners and return.
 			if (selectedSquarePosition == null) {
 				System.out.println("the previous point is null, setting it to "
 						+ targetPosition.toString());
 				selectedSquarePosition = targetPosition;
-				setChanged();
-				notifyObservers();
+				fireGameBoardChanged();
 				return; // nothing more to do, exit from this method.
 			} else if (targetSquare == null) {
 				System.out.println("the square at point "
@@ -163,8 +178,7 @@ public class GameBoard extends java.util.Observable implements Serializable {
 		// the next source
 		// square with a mouse click, even if he just landed on it.
 		selectedSquarePosition = null;
-		setChanged();
-		notifyObservers();
+		fireGameBoardChanged();
 	} // end method jump()
 
 	public Dimension getGameBoardSize() {
@@ -302,8 +316,7 @@ public class GameBoard extends java.util.Observable implements Serializable {
 			if (numberOfMoves > 0) {
 				numberOfMoves--;
 			}
-			setChanged();
-			notifyObservers();
+			fireGameBoardChanged();
 		}
 	}
 

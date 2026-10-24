@@ -17,7 +17,7 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 		super(gameModel);
 		super.setBackground(Color.WHITE);
 		this.setModel(gameModel);
-		this.getModel().addObserver(this);
+		this.getModel().addGameBoardListener(this);
 		this.addMouseListener(this);
 		int gutterX = 12; /*
 						 * gutter between the inner edge of the frame and this
