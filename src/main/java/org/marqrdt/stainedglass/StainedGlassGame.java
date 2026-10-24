@@ -232,6 +232,7 @@ public class StainedGlassGame extends JFrame implements Serializable {
 	 * */
 	// pretty strighforward run loop...
 	public static void main(String args[]) {
+		LookAndFeelSupport.installNimbus();
 		StainedGlassGame app = new StainedGlassGame();
 		// app.setSize(600,800);
 		// app.show();

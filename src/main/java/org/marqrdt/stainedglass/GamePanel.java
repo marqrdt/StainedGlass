@@ -3,11 +3,23 @@ package org.marqrdt.stainedglass;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.ImageIcon;
 
 public class GamePanel extends ThreadedGamePanel implements MouseListener {
+
+	// caches the per-color/per-state square icons loaded from
+	// META-INF/icons so that they are only read from the classpath once.
+	private static final Map<String, Image> ICON_CACHE = new HashMap<String, Image>();
 
 	int panelWidth = 600;
 	int panelHeight = 240;
@@ -35,67 +47,68 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 	}
 
 	public void paintComponent(Graphics g) {
-		// int currentX = 0, currentY = 0;
 		super.paintComponent(g);
-		// java.util.Enumeration enumSquares =
-		// getModel().squareVector.elements();
-		// global variables boardWidth and boardHeight
-		/*
-		 * while( enumSquares.hasMoreElements() ) { Square sq = (Square)
-		 * enumSquares.nextElement(); g.setColor( sq.getColor() ); g.fill3DRect(
-		 * sq.getPoint().x, sq.getPoint().y, squareSize, squareSize, true ); //
-		 * if this square is has been selected by a mouse click, draw a black //
-		 * circle inside of it. if ( getModel().squareVector.indexOf( sq ) ==
-		 * getModel().getSelectedIndex() ) { //System.out.println(
-		 * "I clicked on Square " + getModel().getSelectedIndex() ); g.setColor(
-		 * Color.BLACK ); g.fillOval( sq.getPoint().x + 8, sq.getPoint().y + 8,
-		 * squareSize - 16, squareSize - 16 ); g.setColor( sq.getColor() ); } //
-		 * global variable squareSize }
-		 */
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
+				RenderingHints.VALUE_RENDER_QUALITY);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+		int squareSize = this.getModel().getSquareSize();
 		// display each vertical column of squares
 		for (int i = 0; i < this.getModel().getBoardWidth(); i++) {
 			for (int j = 0; j < this.getModel().getBoardHeight(); j++) {
 				Point currentPoint = new Point(i, j);
 				Square sq = getModel().getSquareAtPoint(currentPoint);
-				if (sq != null) {
-					g.setColor(sq.getColor());
-					// draw each square at the current (x,y) point.
-					g.fill3DRect(sq.getPoint().x, sq.getPoint().y, this
-							.getModel().getSquareSize(), this.getModel()
-							.getSquareSize(), true);
-					// if this square is has been selected by a mouse click,
-					// draw a black
-					// circle inside of it.
-					if (getModel().getSelectedSquarePosition() != null
-							&& getModel().getSelectedSquarePosition().equals(
-									currentPoint)) {
-						// System.out.println( "I clicked on Square " +
-						// getModel().getSelectedIndex() );
-						g.setColor(Color.BLACK);
-						g.fillOval(sq.getPoint().x + 8, sq.getPoint().y + 8,
-								this.getModel().getSquareSize() - 16, this
-										.getModel().getSquareSize() - 16);
-						g.setColor(sq.getColor());
-					}
-					// draw a gray circle inside of potentail legal moves
-					// adjacent to the
-					// currently selected square.
-					if (getModel().getSelectedSquarePosition() != null
-							&& getModel().isLegalMove(
-									getModel().getSelectedSquarePosition(),
-									currentPoint)) {
-						if (getCurrentHightlightColor() != null) {
-							g.setColor(getCurrentHightlightColor());
-						}
-						g.fillOval(sq.getPoint().x + 8, sq.getPoint().y + 8,
-								this.getModel().getSquareSize() - 16, this
-										.getModel().getSquareSize() - 16);
-						g.setColor(sq.getColor());
-					}
+				if (sq == null) {
+					continue;
 				}
-				// global variable squareSize
+				String colorName = sq.getColor().getIconColorName();
+				if (colorName == null) {
+					// an empty (white) square has no icon; leave it blank.
+					continue;
+				}
+				String state = "unselected";
+				if (getModel().getSelectedSquarePosition() != null
+						&& getModel().getSelectedSquarePosition().equals(
+								currentPoint)) {
+					// the square the player has selected as the source of a move.
+					state = "selected";
+				} else if (getModel().getSelectedSquarePosition() != null
+						&& getModel().isLegalMove(
+								getModel().getSelectedSquarePosition(),
+								currentPoint)
+						&& getCurrentHightlightColor() != null) {
+					// a legal target square; blink the indicator on and off in
+					// sync with the highlight timer.
+					state = "target";
+				}
+				Image icon = getSquareIcon(colorName, state);
+				if (icon != null) {
+					g2d.drawImage(icon, sq.getPoint().x, sq.getPoint().y,
+							squareSize, squareSize, this);
+				} else {
+					// fall back to a flat fill if the icon resource is missing.
+					g2d.setColor(sq.getColor());
+					g2d.fillRect(sq.getPoint().x, sq.getPoint().y, squareSize,
+							squareSize);
+				}
 			}
 		}
+	}
+
+	private static Image getSquareIcon(String colorName, String state) {
+		String key = colorName + "_" + state;
+		if (!ICON_CACHE.containsKey(key)) {
+			String path = "META-INF/icons/" + colorName + "_square_" + state
+					+ ".png";
+			URL url = GamePanel.class.getClassLoader().getResource(path);
+			ICON_CACHE.put(key, (url != null) ? new ImageIcon(url).getImage()
+					: null);
+		}
+		return ICON_CACHE.get(key);
 	}
 
 	/*

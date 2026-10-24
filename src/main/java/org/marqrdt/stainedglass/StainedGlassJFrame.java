@@ -37,6 +37,7 @@ public class StainedGlassJFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					LookAndFeelSupport.installNimbus();
 					StainedGlassJFrame frame = new StainedGlassJFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {

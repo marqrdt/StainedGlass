@@ -7,6 +7,33 @@ public class GameColor extends Color {
 		super(c.getRGB());
 	}
 
+	/*
+	 * Returns the name used to look up this color's icon assets under
+	 * META-INF/icons (e.g. "RED", "ORANGE"), or null if this color has no
+	 * corresponding icon (an empty/white square).
+	 */
+	public String getIconColorName() {
+		if (this.equals(Color.RED)) {
+			return "RED";
+		}
+		if (this.equals(Color.YELLOW)) {
+			return "YELLOW";
+		}
+		if (this.equals(Color.BLUE)) {
+			return "BLUE";
+		}
+		if (this.equals(Color.ORANGE)) {
+			return "ORANGE";
+		}
+		if (this.equals(Color.MAGENTA)) {
+			return "MAGENTA";
+		}
+		if (this.equals(Color.GREEN)) {
+			return "GREEN";
+		}
+		return null;
+	}
+
 	public boolean isPrimaryColor() {
 		return (this.equals(Color.BLUE)) || this.equals(Color.RED)
 				|| this.equals(Color.YELLOW);
