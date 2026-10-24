@@ -114,6 +114,17 @@ public class StainedGlassJFrame extends JFrame {
 			}
 		});
 		mnFileMenu.add(newGameNewMenuItem);
+
+		JMenuItem quitMenuItem = new JMenuItem("Quit");
+		quitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+				Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+		quitMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		mnFileMenu.add(quitMenuItem);
+
 		JMenu mnEditMenu = new JMenu("Edit");
 		menuBar.add(mnEditMenu);
 
