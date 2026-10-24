@@ -167,21 +167,12 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 	 */
 
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		// System.out.println("You clicked on me");
-		/*
-		 * when the mouse is clicked, determine which square is under the mouse
-		 * pointer
-		 */
-		Point squarePosition = getModel()
-				.getSquarePositionAtPoint(e.getPoint());
-		if (squarePosition != null) {
-			// on a mouse click, stop the running thread...
-			// stop();
-			start();
-			getModel().jump(squarePosition);
-			// stop();
-		}
+		// intentionally left empty: the move-selection logic lives in
+		// mousePressed() instead. MOUSE_CLICKED only fires when the mouse
+		// does not move at all between press and release, which made clicks
+		// feel overly sensitive to exact pointer position (especially with
+		// trackpads). mousePressed() reacts immediately and reliably to any
+		// click anywhere within a square.
 	}
 
 	/*
@@ -215,8 +206,19 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 	 */
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		/*
+		 * when the mouse is pressed, determine which square is under the
+		 * mouse pointer
+		 */
+		Point squarePosition = getModel()
+				.getSquarePositionAtPoint(e.getPoint());
+		if (squarePosition != null) {
+			// on a mouse click, stop the running thread...
+			// stop();
+			start();
+			getModel().jump(squarePosition);
+			// stop();
+		}
 	}
 
 	/*
