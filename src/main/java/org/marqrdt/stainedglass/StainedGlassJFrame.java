@@ -11,13 +11,13 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
@@ -31,8 +31,8 @@ import java.io.InputStream;
 public class StainedGlassJFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField moveCounterTextField;
-	private JTextField hiScoretextField;
+	private JLabel moveCounterLabel;
+	private JLabel hiScoreValueLabel;
 	private GameBoard gameSquares;
 
 	/**
@@ -146,23 +146,24 @@ public class StainedGlassJFrame extends JFrame {
 		setContentPane(contentPane);
 
 		JToolBar toolBar = new JToolBar();
-		contentPane.add(toolBar, BorderLayout.NORTH);
+		toolBar.setFloatable(false);
+		toolBar.setBorder(new EmptyBorder(4, 8, 4, 8));
+		contentPane.add(toolBar, BorderLayout.SOUTH);
 
-		JLabel lblNewLabel = new JLabel("Moves");
+		JLabel lblNewLabel = new JLabel("Moves:");
 		toolBar.add(lblNewLabel);
+		toolBar.add(Box.createHorizontalStrut(6));
 
-		moveCounterTextField = new JTextField();
-		toolBar.add(moveCounterTextField);
-		moveCounterTextField.setColumns(10);
-		moveCounterTextField.setEditable(false);
+		moveCounterLabel = new JLabel("0");
+		toolBar.add(moveCounterLabel);
+		toolBar.add(Box.createHorizontalStrut(24));
 
-		JLabel hiScoreLabel = new JLabel("Hi Score");
+		JLabel hiScoreLabel = new JLabel("Hi Score:");
 		toolBar.add(hiScoreLabel);
+		toolBar.add(Box.createHorizontalStrut(6));
 
-		hiScoretextField = new JTextField();
-		toolBar.add(hiScoretextField);
-		hiScoretextField.setColumns(10);
-		hiScoretextField.setEditable(false);
+		hiScoreValueLabel = new JLabel("0");
+		toolBar.add(hiScoreValueLabel);
 
 		// JPanel panel = new JPanel();
 		JPanel gamePanel = getGamePanel();
