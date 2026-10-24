@@ -154,9 +154,15 @@ public class StainedGlassJFrame extends JFrame {
 		toolBar.add(lblNewLabel);
 		toolBar.add(Box.createHorizontalStrut(6));
 
-		moveCounterLabel = new JLabel("0");
+		moveCounterLabel = new JLabel(String.valueOf(gameSquares.getScore()));
 		toolBar.add(moveCounterLabel);
 		toolBar.add(Box.createHorizontalStrut(24));
+
+		gameSquares.addGameBoardListener(new GameBoardListener() {
+			public void gameBoardChanged(GameBoard board) {
+				moveCounterLabel.setText(String.valueOf(board.getScore()));
+			}
+		});
 
 		JLabel hiScoreLabel = new JLabel("Hi Score:");
 		toolBar.add(hiScoreLabel);
