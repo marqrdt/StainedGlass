@@ -25,6 +25,10 @@ public class GameBoard implements Serializable {
 	private int squareSize = 50; // the size in pixels of each square
 	private Color colors[] = { Color.RED, Color.YELLOW, Color.ORANGE,
 			Color.BLUE, Color.MAGENTA, Color.GREEN };
+	// the four corner squares are restricted to primary colors only, since a
+	// compound-colored corner square can never be legally jumped (a corner
+	// has too few neighboring squares for a diagonal jump to reach it).
+	private Color primaryColors[] = { Color.RED, Color.YELLOW, Color.BLUE };
 	// Point p;
 	int currentX = 0, currentY = 0;
 	Point selectedSquarePosition = null;
@@ -36,43 +40,41 @@ public class GameBoard implements Serializable {
 		this.setBoardWidth(horizontalSize);
 		this.setSquareSize(squareSize);
 		squares = new Square[this.getBoardWidth()][this.getBoardHeight()];
-		for (int i = 0; i < this.getBoardWidth(); i++) {
-			currentX = i * this.getSquareSize();
-			for (int j = 0; j < this.getBoardHeight(); j++) {
-				currentY = j * this.getSquareSize();
-				Point p = new Point(currentX, currentY);
-				Color squareColor = colors[(int) (Math.random() * colors.length)];
-				// System.out.println( "adding a Square at " + i * boardWidth +
-				// j);
-				// squareVector.add( (i * boardWidth) + j, new Square(
-				// squareColor, p ) );
-				// squareVector.add( new Square( squareColor, p ) );
-				squares[i][j] = new Square(squareColor, p);
-			}
-		}
+		populateBoard();
 	}
 
 	// this method is called to reinitialize the game board, i.e. when
 	// the user clicks on "New Game"
 	public void reinit() {
+		populateBoard();
+		previousSelectedSquarePosition = null;
+		selectedSquarePosition = null;
+		numberOfMoves = 0;
+		fireGameBoardChanged();
+	}
+
+	// (re)populates every square on the board with a random color, except the
+	// four corner squares, which are restricted to primary colors.
+	private void populateBoard() {
 		for (int i = 0; i < this.getBoardWidth(); i++) {
 			currentX = i * this.getSquareSize();
 			for (int j = 0; j < this.getBoardHeight(); j++) {
 				currentY = j * this.getSquareSize();
 				Point p = new Point(currentX, currentY);
-				Color squareColor = colors[(int) (Math.random() * colors.length)];
-				// System.out.println( "adding a Square at " + i * boardWidth +
-				// j);
-				// squareVector.add( (i * boardWidth) + j, new Square(
-				// squareColor, p ) );
-				// squareVector.add( new Square( squareColor, p ) );
+				Color squareColor = randomColorFor(i, j);
 				squares[i][j] = new Square(squareColor, p);
 			}
 		}
-		previousSelectedSquarePosition = null;
-		selectedSquarePosition = null;
-		numberOfMoves = 0;
-		fireGameBoardChanged();
+	}
+
+	private Color randomColorFor(int i, int j) {
+		Color[] pool = isCornerSquare(i, j) ? primaryColors : colors;
+		return pool[(int) (Math.random() * pool.length)];
+	}
+
+	private boolean isCornerSquare(int i, int j) {
+		return (i == 0 || i == this.getBoardWidth() - 1)
+				&& (j == 0 || j == this.getBoardHeight() - 1);
 	}
 
 	public void addGameBoardListener(GameBoardListener listener) {
