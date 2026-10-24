@@ -140,8 +140,6 @@ public class StainedGlassJFrame extends JFrame {
 		});
 		mnEditMenu.add(undoMenuItem);
 
-		JMenu mnGameMenu = new JMenu("Game");
-		menuBar.add(mnGameMenu);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
