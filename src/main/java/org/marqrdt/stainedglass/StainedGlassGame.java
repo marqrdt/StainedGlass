@@ -120,12 +120,9 @@ public class StainedGlassGame extends JFrame implements Serializable {
 
 		// gamePanel.setSize( boardWidth * squareSize + (boardWidth - 1 * 2),
 		// boardHeight * squareSize + (boardHeight - 1 * 2) );
-		// this.setSize( 600, 800 );
 		// gamePanel.updateDisplay();
-		System.out.println(gamePanel.getWidth());
-		System.out.println(gamePanel.getHeight());
-		this.setSize(gamePanel.getWidth(),
-				gamePanel.getHeight() + buttonBox.getHeight());
+		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**

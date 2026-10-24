@@ -94,7 +94,6 @@ public class StainedGlassJFrame extends JFrame {
 						String.valueOf(defaultSquareSize))));
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -134,9 +133,11 @@ public class StainedGlassJFrame extends JFrame {
 
 		// JPanel panel = new JPanel();
 		JPanel gamePanel = getGamePanel();
-		;
 
 		contentPane.add(gamePanel, BorderLayout.CENTER);
+
+		pack();
+		setLocationRelativeTo(null);
 	}
 
 }
