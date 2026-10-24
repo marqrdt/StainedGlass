@@ -65,35 +65,42 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 				if (sq == null) {
 					continue;
 				}
-				String colorName = sq.getColor().getIconColorName();
-				if (colorName == null) {
-					// an empty (white) square has no icon; leave it blank.
-					continue;
-				}
-				String state = "unselected";
-				if (getModel().getSelectedSquarePosition() != null
+
+				boolean blinkOn = getCurrentHightlightColor() != null;
+				boolean isSelected = getModel().getSelectedSquarePosition() != null
 						&& getModel().getSelectedSquarePosition().equals(
-								currentPoint)) {
-					// the square the player has selected as the source of a move.
-					state = "selected";
-				} else if (getModel().getSelectedSquarePosition() != null
+								currentPoint);
+				boolean showTargetIndicator = !isSelected
+						&& getModel().getSelectedSquarePosition() != null
 						&& getModel().isLegalMove(
 								getModel().getSelectedSquarePosition(),
-								currentPoint)
-						&& getCurrentHightlightColor() != null) {
-					// a legal target square; blink the indicator on and off in
-					// sync with the highlight timer.
-					state = "target";
-				}
-				Image icon = getSquareIcon(colorName, state);
-				if (icon != null) {
-					g2d.drawImage(icon, sq.getPoint().x, sq.getPoint().y,
-							squareSize, squareSize, this);
-				} else {
-					// fall back to a flat fill if the icon resource is missing.
-					g2d.setColor(sq.getColor());
-					g2d.fillRect(sq.getPoint().x, sq.getPoint().y, squareSize,
-							squareSize);
+								currentPoint) && blinkOn;
+
+				String colorName = sq.getColor().getIconColorName();
+				if (colorName != null) {
+					String state = isSelected ? "selected"
+							: (showTargetIndicator ? "target" : "unselected");
+					Image icon = getSquareIcon(colorName, state);
+					if (icon != null) {
+						g2d.drawImage(icon, sq.getPoint().x, sq.getPoint().y,
+								squareSize, squareSize, this);
+					} else {
+						// fall back to a flat fill if the icon resource is missing.
+						g2d.setColor(sq.getColor());
+						g2d.fillRect(sq.getPoint().x, sq.getPoint().y,
+								squareSize, squareSize);
+					}
+				} else if (isSelected || showTargetIndicator) {
+					// an empty (white) square has no icon asset, but it can
+					// still be a legal move's source or target, so draw a
+					// simple indicator dot directly so the move is not
+					// hidden from the player.
+					int inset = squareSize / 8;
+					g2d.setColor(isSelected ? Color.BLACK
+							: getCurrentHightlightColor());
+					g2d.fillOval(sq.getPoint().x + inset, sq.getPoint().y
+							+ inset, squareSize - 2 * inset, squareSize - 2
+							* inset);
 				}
 			}
 		}
