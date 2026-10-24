@@ -72,15 +72,15 @@ public class StainedGlassJFrame extends JFrame {
 			System.out.println( resourceIt.next() );
 		}
 		//
-		
-		String gamePropFile = "stainedGlass.properties";
+
+		String gamePropFile = "META-INF/stainedGlass.properties";
 		//String gamePropFile = "/Users/marqrdt/Documents/workspace-sts-3.2.0.RELEASE/StainedGlass/src/META-INF/stainedGlass.properties";
 		//Properties gameProps = GameProperties.loadProperties(gamePropFile,
 		//		Thread.currentThread().getClass().getClassLoader());
 		Properties gameProps = new Properties();
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream( gamePropFile);
 		//InputStream in = new FileInputStream(gamePropFile);
-		
+
 		if ( in == null ) {
 			throw new FileNotFoundException("property file '" + gamePropFile + "' not found in the classpath");
 		} else {

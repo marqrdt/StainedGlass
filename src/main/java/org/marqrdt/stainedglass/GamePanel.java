@@ -1,6 +1,7 @@
 package org.marqrdt.stainedglass;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -25,6 +26,12 @@ public class GamePanel extends ThreadedGamePanel implements MouseListener {
 		this.setSize(gameModel.getBoardWidth() * gameModel.getSquareSize(),
 				gameModel.getBoardHeight() * gameModel.getSquareSize());
 		this.setVisible(true);
+	}
+
+	public Dimension getPreferredSize() {
+		return new Dimension(getModel().getBoardWidth()
+				* getModel().getSquareSize(), getModel().getBoardHeight()
+				* getModel().getSquareSize());
 	}
 
 	public void paintComponent(Graphics g) {
