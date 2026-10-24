@@ -5,7 +5,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class GameBoard implements Serializable {
@@ -15,7 +17,7 @@ public class GameBoard implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final transient List<GameBoardListener> listeners = new ArrayList<GameBoardListener>();
 	// private Vector squareVector = new Vector();
-	private java.util.Stack undoStack = new java.util.Stack();
+	private final Deque<SavedMove> undoStack = new ArrayDeque<SavedMove>();
 	private Square[][] squares;
 	private Dimension gameBoardSize;
 	private int boardWidth = 16; // the number of horizontal squares on the board
@@ -289,7 +291,7 @@ public class GameBoard implements Serializable {
 	public void undo() {
 		if (!undoStack.isEmpty()) {
 			// pop the last saved move off of the stack
-			SavedMove move = (SavedMove) undoStack.pop();
+			SavedMove move = undoStack.pop();
 			// reset the source square's color
 			getSquareAtPoint(move.savedSourcePosition).setColor(
 					move.savedSourceColor);
