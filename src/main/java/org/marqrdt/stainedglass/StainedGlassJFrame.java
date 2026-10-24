@@ -3,6 +3,8 @@ package org.marqrdt.stainedglass;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -103,6 +105,11 @@ public class StainedGlassJFrame extends JFrame {
 		menuBar.add(mnFileMenu);
 
 		JMenuItem newGameNewMenuItem = new JMenuItem("New game...");
+		newGameNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gameSquares.reinit();
+			}
+		});
 		mnFileMenu.add(newGameNewMenuItem);
 		JMenu mnEditMenu = new JMenu("Edit");
 		menuBar.add(mnEditMenu);
