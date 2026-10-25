@@ -5,16 +5,15 @@ StainedGlass is a Java port that I wrote of a horribly addictive game for old Mo
 
 - Game Layout: The game board is a rectangular grid of 16 squares wide and 8 squares high. The colors of the squares are the primary colors blue, red, and yellow, and secondary colors purple, orange, and green. They are arranged at random on the board with the constraint that the corner squares are never colored as compound colors.
 
-- Game Rules: A primary-colored square can jump over an adjacent square in any direction only if it can land on another primary-colored square.
-1. If it lands on a square of a different primary color, the target square becomes the secondary color created from the starting and target squares.
-2. If it lands on a square of the same primary color, the color of the target square remains the same.
-3. When the starting square jumps over an adjacent square (the square in-between the starting and target squares), the following rules apply:
-  - If the adjacent square is a compound color, the color of the starting square is removed from the adjacent square, leaving a primary-colored square.
-  - If the adjacent square is a primary color, the adjacent square is set to an empty square.
+- Game Rules: A primary-colored square can jump over an adjacent square in any direction only if it can land on another primary-colored square or an empty square.
+    - If it lands on a square of a different primary color, the target square becomes the secondary color created from the starting and target squares.
+    - If it lands on a square of the same primary color, the color of the target square remains the same.
+    - When the starting square jumps over an adjacent square (the square in-between the starting and target squares), the following rules apply:
+      - If the adjacent square is a compound color, the color of the starting square is removed from the adjacent square, leaving a primary-colored square.
+      - If the adjacent square is a primary color, the adjacent square is set to an empty square.
 
-A compound-colored square may only jump over and to another square of the same compound color. The square between the starting and ending square becomes blank.
-  
+    A compound-colored square may only jump over and to another square of the same compound color. The square between the starting and ending square becomes blank.
 
 - Game Play: When the player clicks on a square, all legal target squares are highlighted with a gray circle.
 
-- Tips: Have fun! Playing the game is more fun than reading the rules. A general strategy is to clear the corners as soon as possible and work inwards.
+- Tips: Have fun! Playing the game is way more fun than reading the rules. As a general strategy, clear the corners as soon as possible, especially of compound colors, and work inwards.
