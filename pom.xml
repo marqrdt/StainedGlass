@@ -48,12 +48,14 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.8.0</version>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.4.1</version>
 				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>org.marqrdt.stainedglass.StainedGlassJFrame</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
