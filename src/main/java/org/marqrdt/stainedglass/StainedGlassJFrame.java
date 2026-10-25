@@ -181,10 +181,12 @@ public class StainedGlassJFrame extends JFrame {
 
 	private void showAboutDialog() {
 		String message = "StainedGlass\n"
-				+ "Version: " + appVersion + "\n\n"
+				+ "Version: " + appVersion + "\n"
 				+ "A Java port of a horribly addictive game for old\n"
-				+ "Motorola 68K Macs.\n\n"
-				+ "Author: marqrdt";
+				+ "Motorola 68K Macs.\n"
+				+ "Author: Paul Marquardt\n"
+				+ "URL: https://github.com/marqrdt/StainedGlass"
+				;
 		JOptionPane.showMessageDialog(this, message, "About StainedGlass",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
