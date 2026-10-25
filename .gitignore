@@ -1,2 +1,17 @@
 target/
 .DS_Store
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+wbp-meta/
+.metadata/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
