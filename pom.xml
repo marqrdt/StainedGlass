@@ -87,5 +87,84 @@
 	</build>
 	<dependencies>
 	</dependencies>
+	<profiles>
+		<!-- Produces a native macOS .dmg installer via jpackage (bundled with
+		     JDK 14+). jpackage must be on the PATH. Build with:
+		         mvn -Pmac-installer clean verify
+		     The resulting installer is written to target/installer/. -->
+		<profile>
+			<id>mac-installer</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<!-- jpackage copies its entire input directory into the
+							     app bundle, so stage just the runnable jar in its own
+							     clean directory rather than pointing it at all of
+							     target/ (which also has classes/, maven-status/, etc). -->
+							<execution>
+								<id>stage-jpackage-input</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/jpackage-input</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}</directory>
+											<includes>
+												<include>${project.build.finalName}.jar</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>jpackage-mac-dmg</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>jpackage</executable>
+									<arguments>
+										<argument>--type</argument>
+										<argument>dmg</argument>
+										<argument>--name</argument>
+										<argument>StainedGlass</argument>
+										<argument>--app-version</argument>
+										<argument>${project.version}</argument>
+										<argument>--vendor</argument>
+										<argument>marqrdt</argument>
+										<argument>--description</argument>
+										<argument>StainedGlass -- a Java port of a classic Motorola 68K Mac puzzle game</argument>
+										<argument>--input</argument>
+										<argument>${project.build.directory}/jpackage-input</argument>
+										<argument>--main-jar</argument>
+										<argument>${project.build.finalName}.jar</argument>
+										<argument>--main-class</argument>
+										<argument>org.marqrdt.stainedglass.StainedGlassJFrame</argument>
+										<argument>--mac-package-identifier</argument>
+										<argument>org.marqrdt.stainedglass</argument>
+										<argument>--dest</argument>
+										<argument>${project.build.directory}/installer</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
 
