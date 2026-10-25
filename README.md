@@ -17,3 +17,9 @@ StainedGlass is a Java port that I wrote of a horribly addictive game for old Mo
 - Game Play: When the player clicks on a square, all legal target squares are highlighted with a gray circle.
 
 - Tips: Have fun! Playing the game is way more fun than reading the rules. As a general strategy, clear the corners as soon as possible, especially of compound colors, and work inwards.
+
+## License
+StainedGlass is licensed under the [MIT License](LICENSE).
+
+## Release Notes
+See [RELEASE_NOTES.md](RELEASE_NOTES.md) for a summary of changes in each release.
