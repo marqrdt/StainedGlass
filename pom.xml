@@ -79,15 +79,6 @@
 				</executions>
 				<configuration>
 					<mainClass>org.marqrdt.stainedglass.StainedGlassJFrame</mainClass>
-					<arguments>
-						<argument>"you sukc"</argument>
-					</arguments>
-					<systemProperties>
-						<systemProperty>
-							<key>myproperty</key>
-							<value>thisSystemPropertySukcs</value>
-						</systemProperty>
-					</systemProperties>
 				</configuration>
 			</plugin>
 		</plugins>
