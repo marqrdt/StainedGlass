@@ -165,6 +165,96 @@
 				</plugins>
 			</build>
 		</profile>
+		<!-- Produces a native Linux installer via jpackage (bundled with
+		     JDK 14+). jpackage must be on the PATH. Defaults to an .rpm
+		     package (Fedora/RHEL family); requires 'rpmbuild' to be
+		     installed (e.g. sudo dnf install rpm-build). For a .deb
+		     package instead (Debian/Ubuntu family, requires 'fakeroot',
+		     e.g. sudo apt install fakeroot), override the installer
+		     type property:
+		         mvn -Plinux-installer -Dlinux.installer.type=deb clean verify
+		     Build with:
+		         mvn -Plinux-installer clean verify
+		     The resulting installer is written to target/installer/. -->
+		<profile>
+			<id>linux-installer</id>
+			<properties>
+				<linux.installer.type>rpm</linux.installer.type>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<!-- jpackage copies its entire input directory into the
+							     app image, so stage just the runnable jar in its own
+							     clean directory rather than pointing it at all of
+							     target/ (which also has classes/, maven-status/, etc). -->
+							<execution>
+								<id>stage-jpackage-input</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/jpackage-input</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.build.directory}</directory>
+											<includes>
+												<include>${project.build.finalName}.jar</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>jpackage-linux</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>jpackage</executable>
+									<arguments>
+										<argument>--type</argument>
+										<argument>${linux.installer.type}</argument>
+										<argument>--name</argument>
+										<argument>StainedGlass</argument>
+										<argument>--app-version</argument>
+										<argument>${project.version}</argument>
+										<argument>--vendor</argument>
+										<argument>marqrdt</argument>
+										<argument>--description</argument>
+										<argument>StainedGlass -- a Java port of a classic Motorola 68K Mac puzzle game</argument>
+										<argument>--input</argument>
+										<argument>${project.build.directory}/jpackage-input</argument>
+										<argument>--main-jar</argument>
+										<argument>${project.build.finalName}.jar</argument>
+										<argument>--main-class</argument>
+										<argument>org.marqrdt.stainedglass.StainedGlassJFrame</argument>
+										<argument>--linux-package-name</argument>
+										<argument>stainedglass</argument>
+										<argument>--linux-app-category</argument>
+										<argument>Game</argument>
+										<argument>--linux-shortcut</argument>
+										<argument>--dest</argument>
+										<argument>${project.build.directory}/installer</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>
 
