@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -33,6 +34,7 @@ public class StainedGlassJFrame extends JFrame {
 	private JPanel contentPane;
 	private JLabel moveCounterLabel;
 	private GameBoard gameSquares;
+	private String appVersion = "unknown";
 
 	/**
 	 * Launch the application.
@@ -91,6 +93,7 @@ public class StainedGlassJFrame extends JFrame {
 		} else {
 			gameProps.load( in );
 		}
+		this.appVersion = gameProps.getProperty("version", appVersion);
 		this.gameSquares = new GameBoard(Integer.parseInt(gameProps
 				.getProperty("boardWidth", String.valueOf(defaultBoardWidth))),
 				Integer.parseInt(gameProps.getProperty("boardHeight",
@@ -139,6 +142,17 @@ public class StainedGlassJFrame extends JFrame {
 		});
 		mnEditMenu.add(undoMenuItem);
 
+		JMenu mnHelpMenu = new JMenu("Help");
+		menuBar.add(mnHelpMenu);
+
+		JMenuItem aboutMenuItem = new JMenuItem("About StainedGlass");
+		aboutMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAboutDialog();
+			}
+		});
+		mnHelpMenu.add(aboutMenuItem);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -169,6 +183,16 @@ public class StainedGlassJFrame extends JFrame {
 
 		pack();
 		setLocationRelativeTo(null);
+	}
+
+	private void showAboutDialog() {
+		String message = "StainedGlass\n"
+				+ "Version: " + appVersion + "\n\n"
+				+ "A Java port of a horribly addictive game for old\n"
+				+ "Motorola 68K Macs.\n\n"
+				+ "Author: marqrdt";
+		JOptionPane.showMessageDialog(this, message, "About StainedGlass",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 }

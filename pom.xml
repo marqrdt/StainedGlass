@@ -12,14 +12,35 @@
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
+			<!-- filtered so that ${project.version} below is substituted with
+			     the actual POM version at build time -->
 			<resource>
 				<directory>src</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>META-INF/stainedGlass.properties</include>
+				</includes>
+			</resource>
+			<!-- everything else (including binary icon assets) is copied as-is,
+			     unfiltered, to avoid corrupting non-text resources -->
+			<resource>
+				<directory>src</directory>
+				<filtering>false</filtering>
 				<excludes>
 					<exclude>**/*.java</exclude>
+					<exclude>META-INF/stainedGlass.properties</exclude>
 				</excludes>
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<propertiesEncoding>UTF-8</propertiesEncoding>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
