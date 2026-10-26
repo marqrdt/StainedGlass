@@ -1,7 +1,7 @@
 ## Welcome to StainedGlass
 StainedGlass is a Java port that I wrote of a horribly addictive game for old Motorola 68K Macs.
 
-- Game Objective: The objective is to leave as few colored squares on the board, with one square left being a perfect score, by jumping the colored squares over adjacent squares (horizontally, vertically, or diagonally) according to the rules until no more moves are possible.
+- Game Objective: The objective is to leave as few colored squares on the board, with one square left being a perfect score. Squares are cleared by jumping colored squares over adjacent squares (horizontally, vertically, or diagonally) according to the rules until no more moves are possible.
 
 - Game Layout: The game board is a rectangular grid of 16 squares wide and 8 squares high. The colors of the squares are the primary colors blue, red, and yellow, and secondary colors purple, orange, and green. They are arranged at random on the board with the constraint that the corner squares are never colored as compound colors.
 
